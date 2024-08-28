@@ -40,7 +40,6 @@ def main(args=None):
     # Try to open the serial port
     try:
         ser = serial.Serial(
-            # port='COM3',  # Windows
             port='/dev/ttyUSB0', # Linux, run "dmesg | grep -i usb" to find the port
             baudrate=115200,
             timeout=0.1
@@ -57,15 +56,18 @@ def main(args=None):
 
             # Access and print the joystick data
             if joystick_subscriber.joystick_axes:
-                testTransmit = joystick_subscriber.joystick_axes[1]
-                print(f'{testTransmit}')
+                joy_forward_reverse = joystick_subscriber.joystick_axes[1]
+                print(f'{joy_forward_reverse }')
+                joy_left_right = joystick_subscriber.joystick_axes[0]
+                print(f'{joy_left_right}')
             else:
-                testTransmit = 0.0
+                joy_forward_reverse  = 0.0
+                joy_left_right = 0.0
                 print("No joystick data available.")
 
             try:
                 # Pack data into a byte buffer ('=BBf' = '=(Byte)(Byte)(float)')
-                buff = struct.pack('=BBf', 36, 36, testTransmit)
+                buff = struct.pack('=BBff', 36, 36, joy_forward_reverse, joy_left_right)
 
                 # Send data over serial
                 ser.write(buff)
@@ -133,5 +135,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-
