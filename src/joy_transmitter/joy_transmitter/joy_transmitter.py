@@ -56,8 +56,12 @@ def main(args=None):
             rclpy.spin_once(joystick_subscriber, timeout_sec=0.1)
 
             # Access and print the joystick data
-            print(f'Joystick Axes: {joystick_subscriber.joystick_axes}')
-            testTransmit = joystick_subscriber.joystick_axes[0]
+            if joystick_subscriber.joystick_axes:
+                testTransmit = joystick_subscriber.joystick_axes[1]
+                print(f'{testTransmit}')
+            else:
+                testTransmit = 0.0
+                print("No joystick data available.")
 
             try:
                 # Pack data into a byte buffer ('=BBf' = '=(Byte)(Byte)(float)')
